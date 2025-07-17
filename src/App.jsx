@@ -1,15 +1,15 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Route } from 'react-router'
+import Welcome from './components/Welcome.jsx'
+import LoginPage from './components/LoginPage.jsx'
 
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
-    <>
-      
-    </>
+    <Route>
+      <Route path='/' element={<LoginPage />} />
+      <Route path='/welcome' element={<Welcome />} />
+    </Route>
   )
 }
 
