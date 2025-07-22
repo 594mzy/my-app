@@ -1,13 +1,14 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import reactLogo from '../assets/react.svg'
 import viteLogo from '/vite.svg'
 import '../css/Welcome.css'
+import { Link } from 'react-router'
 
 function Welcome(){
     const [count, setCount] = useState(0)
 
     return <>
-    <div>
+    <div className="flex justify-center items-center gap-4">
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -28,6 +29,7 @@ function Welcome(){
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <Link to="/LoginPage">Go to Login Page</Link>
       </>
 }
 export default Welcome

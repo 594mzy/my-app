@@ -1,0 +1,23 @@
+body {
+  font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+}
+
+input::placeholder {
+  color: #b0b8d1;
+  opacity: 1;
+  font-size: 1rem;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+h2 {
+  letter-spacing: 2px;
+}
+
+a {
+  transition: color 0.2s ;
+}
