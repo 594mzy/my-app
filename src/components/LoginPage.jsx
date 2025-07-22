@@ -12,7 +12,7 @@ function LoginPage() {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch('/api/login', {
+      const res = await fetch('http://127.0.0.1:7001/user/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
