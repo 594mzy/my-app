@@ -4,12 +4,35 @@ import '../css/LoginPage.css'
 function LoginPage() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // 这里可以处理登录逻辑，比如发送请求
-    console.log('用户名:', username)
-    console.log('密码:', password)
+    setLoading(true)
+    setError('')
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        setError(data.message || '登录失败')
+      } else {
+        // 登录成功后的处理，比如跳转页面
+        // const data = await res.json()
+        // window.location.href = '/dashboard'
+        alert('登录成功')
+      }
+    } catch (err) {
+      setError('网络错误，请稍后重试')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -39,9 +62,12 @@ function LoginPage() {
             type="submit"
             className="w-full py-2 rounded-md font-bold text-white bg-gradient-to-r from-pink-300 to-blue-300 mt-2 shadow hover:from-pink-400 hover:to-blue-400 transition-all"
           >
-            登录
+            {loading ? '登录中...' : '登录'}
           </button>
         </form>
+        {error && (
+          <div className="mt-4 text-red-500 text-sm">{error}</div>
+        )}
         <div className="mt-6 w-full text-center text-base">
           <span className="text-black">无账号？</span>
           <a href="#" className="text-blue-400 font-semibold ml-2 hover:underline">注册</a>
