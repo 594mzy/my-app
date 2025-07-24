@@ -27,7 +27,7 @@ function LoginPage() {
         // 登录成功后的处理，比如跳转页面
         // const data = await res.json()
         // window.location.href = '/dashboard'
-        alert('登录成功')
+        window.location.href = '/HomePage'
       }
     } catch (err) {
       setError('网络错误，请稍后重试')
