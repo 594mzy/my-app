@@ -1,32 +1,25 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router'
-
-// 示例数据，可替换为实际数据源
-const blindBoxList = [
-  {
-    id: 1,
-    name: '动漫盲盒',
-    img: 'https://img.example.com/box1.jpg',
-    left: 12,
-  },
-  {
-    id: 2,
-    name: '潮玩盲盒',
-    img: 'https://img.example.com/box2.jpg',
-    left: 5,
-  },
-  {
-    id: 3,
-    name: '手办盲盒',
-    img: 'https://img.example.com/box3.jpg',
-    left: 20,
-  },
-  // ...可继续添加
-]
 
 function HomePage() {
   const [search, setSearch] = useState('')
+  const [blindBoxList, setBlindBoxList] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const navigate = useNavigate()
+
+  // 从后端获取盲盒列表
+  useEffect(() => {
+    setLoading(true)
+    fetch('http://127.0.0.1:7001/blind-box/list')
+      .then(res => {
+        if (!res.ok) throw new Error('获取盲盒列表失败')
+        return res.json()
+      })
+      .then(data => setBlindBoxList(data))
+      .catch(() => setError('盲盒数据加载失败'))
+      .finally(() => setLoading(false))
+  }, [])
 
   // 过滤逻辑
   const filteredList = search.trim()
@@ -39,7 +32,6 @@ function HomePage() {
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault()
-      // 这里不需要额外处理，受控输入已自动过滤
     }
   }
 
@@ -110,7 +102,11 @@ function HomePage() {
 
       {/* 盲盒卡片列表 */}
       <ul className="flex flex-wrap gap-6 justify-center px-4 pb-16">
-        {filteredList.length === 0 ? (
+        {loading ? (
+          <div className="text-gray-400 text-lg mt-20">加载中...</div>
+        ) : error ? (
+          <div className="text-red-400 text-lg mt-20">{error}</div>
+        ) : filteredList.length === 0 ? (
           <div className="text-gray-400 text-lg mt-20">暂无相关盲盒</div>
         ) : (
           filteredList.map(item => (
@@ -127,7 +123,7 @@ function HomePage() {
               />
               <div className="w-full px-4 py-3 flex flex-col items-start">
                 <div className="text-lg font-bold text-gray-800 mb-1">{item.name}</div>
-                <div className="text-sm text-gray-500 mb-4">剩余数量：{item.left}</div>
+                <div className="text-sm text-gray-500 mb-4">剩余数量：{item.stock ?? 0}</div>
                 <button
                   onClick={() => navigate(`/detail/${item.id}`)}
                   className="mt-auto px-4 py-1 bg-sky-500 text-white rounded hover:bg-sky-600 transition font-semibold"
@@ -142,4 +138,5 @@ function HomePage() {
     </div>
   )
 }
+
 export default HomePage

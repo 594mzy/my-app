@@ -76,7 +76,7 @@ function RegisterPage() {
         )}
         <div className="mt-6 w-full text-center text-base">
           <span className="text-black">已有账号？</span>
-          <Link to="/LoginPage" className="text-blue-400 font-semibold ml-2 hover:underline">登录</Link>
+          <Link to="/" className="text-blue-400 font-semibold ml-2 hover:underline">登录</Link>
         </div>
       </div>
     </div>
