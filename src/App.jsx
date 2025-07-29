@@ -3,6 +3,8 @@ import LoginPage from './components/LoginPage.jsx'
 import RegisterPage from './components/RegisterPage.jsx'
 import HomePage from './components/HomePage.jsx'
 import AboutPage from './components/AboutPage.jsx'
+import ManagementLoginPage from './components/ManagementLoginPage.jsx'
+import ManagementPage from './components/ManagementPage.jsx'
 
 function App() {
 
@@ -13,6 +15,8 @@ function App() {
       <Route path='/RegisterPage' element={<RegisterPage />} />
       <Route path='/HomePage' element={<HomePage />} />
       <Route path="/detail/:id" element={<AboutPage />} />
+      <Route path='/ManagementLogin' element={<ManagementLoginPage />} />
+      <Route path='/ManagementPage' element={<ManagementPage />} />
     </Routes>
   )
 }

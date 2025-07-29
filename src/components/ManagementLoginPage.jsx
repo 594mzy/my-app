@@ -2,7 +2,7 @@ import { useState } from 'react'
 import '../css/LoginPage.css'
 import { Link } from 'react-router'
 
-function LoginPage() {
+function ManagementLoginPage() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -13,19 +13,12 @@ function LoginPage() {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch('http://127.0.0.1:7001/user/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-      })
-      if (!res.ok) {
-        const data = await res.json()
-        setError(data.message || '登录失败')
+      const res = (username == '管理员' && password == '123456') ? true : false
+      if (!res) {
+        setError('登录失败')
       } else {
         // 登录成功后的处理
-        window.location.href = '/HomePage'
+        window.location.href = '/ManagementPage'
       }
     } catch (err) {
       setError('网络错误，请稍后重试')
@@ -37,7 +30,7 @@ function LoginPage() {
   return (
     <div className="flex justify-center items-center min-h-[95vh] bg-gradient-to-br from-pink-200 via-purple-100 to-blue-200">
       <div className="bg-white rounded-2xl shadow-lg max-w-md w-full px-12 py-14 flex flex-col items-center">
-        <h2 className="text-3xl font-bold text-black mb-10">盲盒抽盒机</h2>
+        <h2 className="text-3xl font-bold text-black mb-10">管理员登录</h2>
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
           <input
             id="username"
@@ -68,15 +61,11 @@ function LoginPage() {
           <div className="mt-4 text-red-500 text-sm">{error}</div>
         )}
         <div className="mt-6 w-full text-center text-base">
-          <span className="text-black">无账号？</span>
-          <Link to="/RegisterPage" className="text-blue-400 font-semibold ml-2 hover:underline">注册</Link>
-        </div>
-        <div className="mt-6 w-full text-center text-base">
-          <Link to="/ManagementLogin" className="text-blue-400 font-semibold ml-2 hover:underline">以管理员身份登录</Link>
+          <Link to="/" className="text-blue-400 font-semibold ml-2 hover:underline">返回用户登录</Link>
         </div>
       </div>
     </div>
   )
 }
 
-export default LoginPage
+export default ManagementLoginPage
