@@ -19,7 +19,7 @@ function ManagementLoginPage() {
         setError('登录失败')
       } else {
         // 登录成功后的处理
-        navigate('/HomePage') // 跳转到首页
+        navigate('/ManagementPage') // 跳转到首页
       }
     } catch (err) {
       setError('网络错误，请稍后重试')
