@@ -1,5 +1,3 @@
-import React from 'react';
-
 const ItemList = ({ items }) => {
   return (
     <div className="flex flex-col gap-y-4 w-full items-center mt-6">

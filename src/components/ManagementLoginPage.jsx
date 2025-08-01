@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import '../css/LoginPage.css'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 
 function ManagementLoginPage() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -18,7 +19,7 @@ function ManagementLoginPage() {
         setError('登录失败')
       } else {
         // 登录成功后的处理
-        window.location.href = '/ManagementPage'
+        navigate('/HomePage') // 跳转到首页
       }
     } catch (err) {
       setError('网络错误，请稍后重试')

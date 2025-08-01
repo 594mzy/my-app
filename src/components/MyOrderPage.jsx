@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { NavLink } from 'react-router'
 
-// 假设登录后用户名存储在localStorage
 const getUsername = () => localStorage.getItem('username') || ''
 
 function MyOrderPage() {
