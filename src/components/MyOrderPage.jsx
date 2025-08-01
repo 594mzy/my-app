@@ -1,44 +1,51 @@
 import { useState, useEffect } from 'react'
-import { NavLink, useNavigate } from 'react-router'
+import { NavLink } from 'react-router'
 
-function HomePage() {
+// 假设登录后用户名存储在localStorage
+const getUsername = () => localStorage.getItem('username') || ''
+
+function MyOrderPage() {
   const [search, setSearch] = useState('')
-  const [blindBoxList, setBlindBoxList] = useState([])
+  const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const navigate = useNavigate()
 
-  // 从后端获取盲盒列表
+  // 获取订单列表
   useEffect(() => {
+    const username = getUsername()
+    if (!username) {
+      setError('请先登录')
+      setLoading(false)
+      return
+    }
     setLoading(true)
-    fetch('http://127.0.0.1:7001/blind-box/list')
+    fetch('http://127.0.0.1:7001/order/list', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username }),
+    })
       .then(res => {
-        if (!res.ok) throw new Error('获取盲盒列表失败')
+        if (!res.ok) throw new Error('获取订单失败')
         return res.json()
       })
-      .then(data => setBlindBoxList(data))
-      .catch(() => setError('盲盒数据加载失败'))
+      .then(data => setOrders(data))
+      .catch(() => setError('订单加载失败'))
       .finally(() => setLoading(false))
   }, [])
 
-  // 过滤逻辑
-  const filteredList = search.trim()
-    ? blindBoxList.filter(item =>
-        item.name.toLowerCase().includes(search.trim().toLowerCase())
+  // 搜索过滤
+  const filteredOrders = search.trim()
+    ? orders.filter(order =>
+        order.item &&
+        order.item.toLowerCase().includes(search.trim().toLowerCase())
       )
-    : blindBoxList
+    : orders
 
-  // 输入框回车搜索
+  // 搜索框事件
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-    }
+    if (e.key === 'Enter') e.preventDefault()
   }
-
-  // 清空输入框时恢复全部
-  const handleChange = (e) => {
-    setSearch(e.target.value)
-  }
+  const handleChange = (e) => setSearch(e.target.value)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100">
@@ -80,7 +87,7 @@ function HomePage() {
           value={search}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          placeholder="请输入盲盒名称搜索"
+          placeholder="请输入物品名称搜索"
           className="w-80 px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:border-sky-400 text-lg bg-white"
         />
         <button
@@ -100,43 +107,36 @@ function HomePage() {
         )}
       </div>
 
-      {/* 盲盒卡片列表 */}
-      <ul className="flex flex-wrap gap-6 justify-center px-4 pb-16">
+      {/* 订单列表 */}
+      <div className="flex flex-col gap-y-4 w-full items-center mt-6">
         {loading ? (
           <div className="text-gray-400 text-lg mt-20">加载中...</div>
         ) : error ? (
           <div className="text-red-400 text-lg mt-20">{error}</div>
-        ) : filteredList.length === 0 ? (
-          <div className="text-gray-400 text-lg mt-20">暂无相关盲盒</div>
+        ) : filteredOrders.length === 0 ? (
+          <div className="text-gray-400 text-lg mt-20">暂无相关订单</div>
         ) : (
-          filteredList.map(item => (
-            <li
-              key={item.id}
-              className="w-60 bg-white rounded-lg shadow-md overflow-hidden flex flex-col items-center"
+          filteredOrders.map(order => (
+            <div
+              key={order.id}
+              className="w-1/2 h-[10vh] flex items-center border border-gray-300 rounded-lg p-3 bg-white shadow-md hover:shadow-lg transition duration-200"
             >
-              <img
-                src={item.img}
-                alt={item.name}
-                className="w-60 h-60 object-cover"
-                width={240}
-                height={240}
-              />
-              <div className="w-full px-4 py-3 flex flex-col items-start">
-                <div className="text-lg font-bold text-gray-800 mb-1">{item.name}</div>
-                <div className="text-sm text-gray-500 mb-4">剩余数量：{item.stock ?? 0}</div>
-                <button
-                  onClick={() => navigate(`/detail/${item.id}`)}
-                  className="mt-auto px-4 py-1 bg-sky-500 text-white rounded hover:bg-sky-600 transition font-semibold"
-                >
-                  查看详情
-                </button>
+              {/* 左侧文字 */}
+              <div className="ml-3 flex flex-col justify-center">
+                <div className="font-semibold text-sm">{order.username}</div>
+                <div className="font-semibold text-sm">{order.item}</div>
               </div>
-            </li>
+              {/* 右侧文字 */}
+              <div className="ml-3 flex flex-col justify-center ml-auto">
+                <div className="text-xs text-gray-600">订单编号：{order.orderID}</div>
+                <div className="text-xs text-gray-600">下单时间：{order.createdAt ? order.createdAt : ''}</div>
+              </div>
+            </div>
           ))
         )}
-      </ul>
+      </div>
     </div>
   )
 }
 
-export default HomePage
+export default MyOrderPage

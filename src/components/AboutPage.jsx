@@ -34,10 +34,11 @@ function BlindBoxDetailPage() {
 
   const handleDraw = async () => {
     try {
+      const username = localStorage.getItem('username') || '';
       const res = await fetch('http://127.0.0.1:7001/blind-box/draw', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ boxID: id }),
+        body: JSON.stringify({ boxID: id, username }),
       });
       const data = await res.json();
       if (data.item) {

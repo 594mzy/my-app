@@ -25,6 +25,7 @@ function LoginPage() {
         setError(data.message || '登录失败')
       } else {
         // 登录成功后的处理
+        localStorage.setItem('username', username) // 存储用户名
         window.location.href = '/HomePage'
       }
     } catch (err) {
